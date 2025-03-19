@@ -1,34 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect, Fragment} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import ListProductos from './components/ListProductos';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [productos, setProductos] = useState(() => {
+    //LS= LocalStorage
+    const datosLS = localStorage.getItem("productos");
+    return datosLS ? JSON.parse(datosLS) : [
+      { id: 1, nombre: "Monitor", precio: 250, stock: 10 },
+      { id: 2, nombre: "Teclado", precio: 50, stock: 25 },
+      { id: 3, nombre: "Mouse", precio: 30, stock: 40 },
+      { id: 3, nombre: "MousePad", precio: 20, stock: 30 },
+      { id: 3, nombre: "Tableta Grafica", precio: 50, stock: 10 }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("productos", JSON.stringify(productos));
+  }, [productos]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Fragment>
+      <h1>Inventario de Productos</h1>
+      <ListProductos productos={productos}/>
+    </Fragment>
   )
 }
 
